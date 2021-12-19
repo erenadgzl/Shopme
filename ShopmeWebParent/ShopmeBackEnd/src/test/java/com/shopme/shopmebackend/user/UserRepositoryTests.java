@@ -70,7 +70,18 @@ public class UserRepositoryTests {
     public void testCountById(){
         Integer id = 1;
         Long count = repo.countById(id);
-
         assertThat(count).isNotNull().isGreaterThan(0);
+    }
+
+    @Test
+    public void testDisabledUser(){
+        Integer id = 1;
+        repo.updateEnabledStatus(id, false);
+    }
+
+    @Test
+    public void testEnabledUser(){
+        Integer id = 1;
+        repo.updateEnabledStatus(id, true);
     }
 }
