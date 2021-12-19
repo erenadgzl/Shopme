@@ -17,7 +17,7 @@
     <div>
         <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
             <a class="navbar-brand" th:href="@{/}">
-                <img th:src="@{images/ShopmeAdminSmall.png}">
+                <img th:src="@{/images/ShopmeAdminSmall.png}">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar">
                 <span class="navbar-toggler-icon"></span>
@@ -91,13 +91,13 @@
                 <th>[[${user.lastName}]]</th>
                 <th>[[${user.roles}]]</th>
                 <th>
-                    <a th:if="${user.enabled}" class="fas fa-check-circle fa-2x icon-green" th:href=""></a>
-                    <a th:if="${!user.enabled}" class="fas fa-check-circle fa-2x icon-green" th:href=""></a>
+                    <a th:if="${user.enabled == true}" class="fas fa-check-circle fa-2x icon-green"></a>
+                    <a th:if="${user.enabled == false}" class="fas fa-check-circle fa-2x icon-dark"></a>
                 </th>
                 <th>
-                    <a class="fas fa-edit fa-2x icon-green" th:href=""></a>
+                    <a class="fas fa-edit fa-2x icon-green" th:href="@{'/users/edit/' + ${user.id}}"></a>
                     &nbsp;
-                    <a class="fas fa-trash fa-2x icon-dark" th:href=""></a>
+                    <a class="fas fa-trash fa-2x icon-dark"></a>
                 </th>
             </tr>
             </tbody>
