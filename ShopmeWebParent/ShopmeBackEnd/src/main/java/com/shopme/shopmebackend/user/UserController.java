@@ -5,6 +5,8 @@ import com.shopme.shopmebackend.util.FileUploadUtil;
 import com.shopme.shopmecommon.entity.Role;
 import com.shopme.shopmecommon.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.IOException;
 import java.util.List;
 
+import static com.shopme.shopmebackend.user.UserService.PAGE_SIZE;
+
 @Controller
 @RequestMapping("/users")
 public class UserController {
@@ -26,6 +30,25 @@ public class UserController {
     @GetMapping
     public String listAll(Model model) {
         List<User> users = userService.listAll();
+        model.addAttribute("userList", users);
+        return "redirect:/users/page/1";
+    }
+
+    @GetMapping("/page/{pageNumber}")
+    public String listAll(@PathVariable("pageNumber") int pageNumber, Model model) {
+        Page<User> users = userService.listByPage(pageNumber);
+
+        long startCount = (pageNumber - 1 ) * PAGE_SIZE + 1;
+        long endCount = startCount + PAGE_SIZE - 1;
+        if(endCount > users.getTotalElements()){
+            endCount = users.getTotalElements();
+        }
+
+        model.addAttribute("currentPage", pageNumber);
+        model.addAttribute("totalPages", users.getTotalPages());
+        model.addAttribute("startCount", startCount);
+        model.addAttribute("endCount", endCount);
+        model.addAttribute("totalItems", users.getTotalElements());
         model.addAttribute("userList", users);
         return "users";
     }
