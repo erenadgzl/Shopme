@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.util.List;
 
@@ -29,14 +30,13 @@ public class UserController {
 
     @GetMapping
     public String listAll(Model model) {
-        List<User> users = userService.listAll();
-        model.addAttribute("userList", users);
-        return "redirect:/users/page/1";
+        return listAll(1, model, "firstName", "asc");
     }
 
     @GetMapping("/page/{pageNumber}")
-    public String listAll(@PathVariable("pageNumber") int pageNumber, Model model) {
-        Page<User> users = userService.listByPage(pageNumber);
+    public String listAll(@PathVariable("pageNumber") int pageNumber, Model model,
+                          @Param("sortField") String sortField, @Param("sortDir") String sortDir) {
+        Page<User> users = userService.listByPage(pageNumber, sortField, sortDir);
 
         long startCount = (pageNumber - 1 ) * PAGE_SIZE + 1;
         long endCount = startCount + PAGE_SIZE - 1;
@@ -44,12 +44,17 @@ public class UserController {
             endCount = users.getTotalElements();
         }
 
+        String reverseSortDir = sortDir.equals("asc") ? "desc" : "asc";
+
         model.addAttribute("currentPage", pageNumber);
         model.addAttribute("totalPages", users.getTotalPages());
         model.addAttribute("startCount", startCount);
         model.addAttribute("endCount", endCount);
         model.addAttribute("totalItems", users.getTotalElements());
         model.addAttribute("userList", users);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("reverseSortDir", reverseSortDir);
         return "users";
     }
 
