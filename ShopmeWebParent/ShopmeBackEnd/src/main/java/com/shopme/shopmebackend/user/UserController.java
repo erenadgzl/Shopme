@@ -30,7 +30,7 @@ public class UserController {
 
     @GetMapping
     public String listAll(Model model) {
-        return listAll(1, model, "firstName", "asc");
+        return listAll(1, model, "id", "asc");
     }
 
     @GetMapping("/page/{pageNumber}")
