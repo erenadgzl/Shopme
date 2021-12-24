@@ -30,17 +30,19 @@ public class UserController {
 
     @GetMapping
     public String listAll(Model model) {
-        return listAll(1, model, "id", "asc");
+        return listAll(1, model, "id", "asc", null);
     }
 
     @GetMapping("/page/{pageNumber}")
     public String listAll(@PathVariable("pageNumber") int pageNumber, Model model,
-                          @Param("sortField") String sortField, @Param("sortDir") String sortDir) {
-        Page<User> users = userService.listByPage(pageNumber, sortField, sortDir);
+                          @Param("sortField") String sortField,
+                          @Param("sortDir") String sortDir,
+                          @Param("keyword") String keyword) {
+        Page<User> users = userService.listByPage(pageNumber, sortField, sortDir, keyword);
 
-        long startCount = (pageNumber - 1 ) * PAGE_SIZE + 1;
+        long startCount = (pageNumber - 1) * PAGE_SIZE + 1;
         long endCount = startCount + PAGE_SIZE - 1;
-        if(endCount > users.getTotalElements()){
+        if (endCount > users.getTotalElements()) {
             endCount = users.getTotalElements();
         }
 
@@ -55,6 +57,7 @@ public class UserController {
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("sortField", sortField);
         model.addAttribute("reverseSortDir", reverseSortDir);
+        model.addAttribute("keyword", keyword);
         return "users";
     }
 
@@ -70,7 +73,7 @@ public class UserController {
 
     @PostMapping("/save")
     public String saveUser(User user, RedirectAttributes redirectAttributes, @RequestParam("image") MultipartFile multipartFile) throws IOException {
-        if(!multipartFile.isEmpty()){
+        if (!multipartFile.isEmpty()) {
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
             user.setPhotos(fileName);
             User savedUser = userService.save(user);
@@ -79,8 +82,8 @@ public class UserController {
 
             FileUploadUtil.cleanDir(uploadDir);
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-        }else {
-            if(user.getPhotos().isEmpty()){
+        } else {
+            if (user.getPhotos().isEmpty()) {
                 user.setPhotos(null);
             }
             userService.save(user);
