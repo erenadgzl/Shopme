@@ -29,7 +29,7 @@ public class User {
 
     private boolean enabled;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -111,7 +111,7 @@ public class User {
         this.roles = roles;
     }
 
-    public void addRole(Role role){
+    public void addRole(Role role) {
         this.roles.add(role);
     }
 
@@ -127,8 +127,8 @@ public class User {
     }
 
     @Transient
-    public String getPhotosImagePath(){
-        if( id == null || photos == null){
+    public String getPhotosImagePath() {
+        if (id == null || photos == null) {
             return "/images/default-user.png";
         }
         return "/user-photos/" + this.id + "/" + this.photos;
