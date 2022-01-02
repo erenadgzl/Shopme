@@ -1,6 +1,7 @@
-package com.shopme.shopmebackend.user;
+package com.shopme.shopmebackend.user.controller;
 
 import com.shopme.shopmebackend.security.ShopmeUserDetails;
+import com.shopme.shopmebackend.user.UserService;
 import com.shopme.shopmebackend.util.FileUploadUtil;
 import com.shopme.shopmecommon.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class AccountController {
         String email = shopmeUserDetails.getUsername();
         User user = userService.getByEmail(email);
         model.addAttribute("user", user);
-        return "account_form";
+        return "users/account_form";
     }
 
     @PostMapping("/update")
