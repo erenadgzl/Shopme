@@ -23,12 +23,31 @@ public class Category {
 
     private boolean enabled;
 
-    @Column(name = "parent_id")
-    private Integer parentId;
+    @OneToOne
+    @JoinColumn(name = "parent_id")
+    private Category parent;
 
-    @OneToMany
-    @JoinColumn(name="parent_id")
+    @OneToMany(mappedBy = "parent")
     private Set<Category> children = new HashSet<>();
+
+    public Category() {
+    }
+
+    public Category(Integer id) {
+        this.id = id;
+    }
+
+    public Category(String name) {
+        super();
+        this.name = name;
+        this.alias = name;
+        this.image = "default.png";
+    }
+
+    public Category(String name, Category parent) {
+        this(name);
+        this.parent = parent;
+    }
 
     public Integer getId() {
         return id;
@@ -70,12 +89,12 @@ public class Category {
         this.enabled = enabled;
     }
 
-    public Integer getParentId() {
-        return parentId;
+    public Category getParent() {
+        return parent;
     }
 
-    public void setParentId(Integer parentId) {
-        this.parentId = parentId;
+    public void setParent(Category parent) {
+        this.parent = parent;
     }
 
     public Set<Category> getChildren() {
