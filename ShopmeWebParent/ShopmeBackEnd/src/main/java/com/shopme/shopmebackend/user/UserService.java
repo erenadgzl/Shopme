@@ -1,5 +1,6 @@
 package com.shopme.shopmebackend.user;
 
+import com.shopme.shopmebackend.paging.PagingAndSortingHelper;
 import com.shopme.shopmecommon.entity.Role;
 import com.shopme.shopmecommon.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,89 +18,54 @@ import java.util.NoSuchElementException;
 @Service
 @Transactional
 public class UserService {
+    public static final int USERS_PER_PAGE = 4;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository userRepo;
+
     @Autowired
-    private RoleRepository roleRepository;
+    private RoleRepository roleRepo;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public static int PAGE_SIZE = 2;
-
-    public List<User> listAll() {
-        return (List<User>) userRepository.findAll(Sort.by("firstName").ascending());
+    public User getByEmail(String email) {
+        return userRepo.getUserByEmail(email);
     }
 
-    public Page<User> listByPage(int pageNum, String sortField, String sortDir, String keyword) {
-        Sort sort = Sort.by(sortField);
-        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
-        Pageable pageable = PageRequest.of(pageNum - 1, PAGE_SIZE, sort);
+    public List<User> listAll() {
+        return (List<User>) userRepo.findAll(Sort.by("firstName").ascending());
+    }
 
-        if(keyword != null){
-            return userRepository.findAll(keyword, pageable);
-        }
-        return userRepository.findAll(pageable);
+    public void listByPage(int pageNum, PagingAndSortingHelper helper) {
+        helper.listEntities(pageNum, USERS_PER_PAGE, userRepo);
     }
 
     public List<Role> listRoles() {
-        return (List<Role>) roleRepository.findAll();
+        return (List<Role>) roleRepo.findAll();
     }
 
     public User save(User user) {
         boolean isUpdatingUser = (user.getId() != null);
+
         if (isUpdatingUser) {
-            User existingUser = userRepository.findById(user.getId()).get();
+            User existingUser = userRepo.findById(user.getId()).get();
+
             if (user.getPassword().isEmpty()) {
                 user.setPassword(existingUser.getPassword());
             } else {
                 encodePassword(user);
             }
-        }
-        return userRepository.save(user);
-    }
 
-    private void encodePassword(User user) {
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
-    }
-
-    public boolean isEmailUnique(Integer id, String email) {
-        User user = userRepository.findByEmail(email);
-        boolean isNewUser = (id == null);
-        if (isNewUser) {
-            return user == null;
         } else {
-            return user.getId() == id;
+            encodePassword(user);
         }
-    }
 
-    public User get(Integer id) throws UserNotFoundException {
-        try {
-            return userRepository.findById(id).get();
-        } catch (NoSuchElementException e) {
-            throw new UserNotFoundException("Could not find any user with ID :" + id);
-        }
-    }
-
-    public User getByEmail(String email){
-        return userRepository.findByEmail(email);
-    }
-
-    public void delete(Integer id) throws UserNotFoundException {
-        Long count = userRepository.countById(id);
-        if (count == null || count == 0) {
-            throw new UserNotFoundException("Could not find any user with ID :" + id);
-        }
-        userRepository.deleteById(id);
-    }
-
-    public void updateUserEnabledStatus(Integer id, boolean enabled) {
-        userRepository.updateEnabledStatus(id, enabled);
+        return userRepo.save(user);
     }
 
     public User updateAccount(User userInForm) {
-        User userInDB = userRepository.findById(userInForm.getId()).get();
+        User userInDB = userRepo.findById(userInForm.getId()).get();
 
         if (!userInForm.getPassword().isEmpty()) {
             userInDB.setPassword(userInForm.getPassword());
@@ -113,6 +79,50 @@ public class UserService {
         userInDB.setFirstName(userInForm.getFirstName());
         userInDB.setLastName(userInForm.getLastName());
 
-        return userRepository.save(userInDB);
+        return userRepo.save(userInDB);
+    }
+
+    private void encodePassword(User user) {
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+    }
+
+    public boolean isEmailUnique(Integer id, String email) {
+        User userByEmail = userRepo.getUserByEmail(email);
+
+        if (userByEmail == null) return true;
+
+        boolean isCreatingNew = (id == null);
+
+        if (isCreatingNew) {
+            if (userByEmail != null) return false;
+        } else {
+            if (userByEmail.getId() != id) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public User get(Integer id) throws UserNotFoundException {
+        try {
+            return userRepo.findById(id).get();
+        } catch (NoSuchElementException ex) {
+            throw new UserNotFoundException("Could not find any user with ID " + id);
+        }
+    }
+
+    public void delete(Integer id) throws UserNotFoundException {
+        Long countById = userRepo.countById(id);
+        if (countById == null || countById == 0) {
+            throw new UserNotFoundException("Could not find any user with ID " + id);
+        }
+
+        userRepo.deleteById(id);
+    }
+
+    public void updateUserEnabledStatus(Integer id, boolean enabled) {
+        userRepo.updateEnabledStatus(id, enabled);
     }
 }

@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Set;
 
 public class ShopmeUserDetails implements UserDetails {
-
     private User user;
 
     public ShopmeUserDetails(User user) {
@@ -22,9 +21,14 @@ public class ShopmeUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<Role> roles = user.getRoles();
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
-        return authorities;
+
+        List<SimpleGrantedAuthority> authories = new ArrayList<>();
+
+        for (Role role : roles) {
+            authories.add(new SimpleGrantedAuthority(role.getName()));
+        }
+
+        return authories;
     }
 
     @Override
@@ -57,8 +61,8 @@ public class ShopmeUserDetails implements UserDetails {
         return user.isEnabled();
     }
 
-    public String getFullName(){
-        return user.getFullName();
+    public String getFullname() {
+        return this.user.getFirstName() + " " + this.user.getLastName();
     }
 
     public void setFirstName(String firstName) {
@@ -67,5 +71,9 @@ public class ShopmeUserDetails implements UserDetails {
 
     public void setLastName(String lastName) {
         this.user.setLastName(lastName);
+    }
+
+    public boolean hasRole(String roleName) {
+        return user.hasRole(roleName);
     }
 }

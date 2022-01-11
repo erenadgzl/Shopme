@@ -66,13 +66,6 @@ public class UserRepositoryTests {
     }
 
     @Test
-    public void testGetUserByEmail(){
-        String email = "erenadiguzel966@gmail.com";
-        User user = repo.findByEmail(email);
-        assertThat(user).isNotNull();
-    }
-
-    @Test
     public void testCountById(){
         Integer id = 1;
         Long count = repo.countById(id);

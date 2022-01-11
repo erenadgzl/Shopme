@@ -1,5 +1,7 @@
 package com.shopme.shopmebackend.user.controller;
 
+import java.io.IOException;
+
 import com.shopme.shopmebackend.security.ShopmeUserDetails;
 import com.shopme.shopmebackend.user.UserService;
 import com.shopme.shopmebackend.util.FileUploadUtil;
@@ -16,21 +18,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
-
 @Controller
 @RequestMapping("/account")
 public class AccountController {
 
     @Autowired
-    private UserService userService;
+    private UserService service;
 
     @GetMapping
-    private String viewDetails(@AuthenticationPrincipal ShopmeUserDetails shopmeUserDetails, Model model) {
-        String email = shopmeUserDetails.getUsername();
-        User user = userService.getByEmail(email);
+    public String viewDetails(@AuthenticationPrincipal ShopmeUserDetails loggedUser,
+                              Model model) {
+        String email = loggedUser.getUsername();
+        User user = service.getByEmail(email);
         model.addAttribute("user", user);
+
         return "users/account_form";
+
     }
 
     @PostMapping("/update")
@@ -41,7 +44,7 @@ public class AccountController {
         if (!multipartFile.isEmpty()) {
             String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
             user.setPhotos(fileName);
-            User savedUser = userService.updateAccount(user);
+            User savedUser = service.updateAccount(user);
 
             String uploadDir = "user-photos/" + savedUser.getId();
 
@@ -50,7 +53,7 @@ public class AccountController {
 
         } else {
             if (user.getPhotos().isEmpty()) user.setPhotos(null);
-            userService.updateAccount(user);
+            service.updateAccount(user);
         }
 
         loggedUser.setFirstName(user.getFirstName());
@@ -60,6 +63,4 @@ public class AccountController {
 
         return "redirect:/account";
     }
-
-
 }
