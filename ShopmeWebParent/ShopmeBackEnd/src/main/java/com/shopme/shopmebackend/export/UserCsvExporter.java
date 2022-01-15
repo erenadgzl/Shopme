@@ -1,6 +1,6 @@
 package com.shopme.shopmebackend.export;
 
-import com.shopme.shopmecommon.entity.User;
+import com.shopme.shopme.common.entity.User;
 import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;

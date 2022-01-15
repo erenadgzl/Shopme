@@ -1,14 +1,12 @@
 package com.shopme.shopmebackend.user;
 
 import com.shopme.shopmebackend.paging.SearchRepository;
-import com.shopme.shopmecommon.entity.User;
+import com.shopme.shopme.common.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 public interface UserRepository extends SearchRepository<User, Integer> {
     @Query("SELECT u FROM User u WHERE u.email = :email")

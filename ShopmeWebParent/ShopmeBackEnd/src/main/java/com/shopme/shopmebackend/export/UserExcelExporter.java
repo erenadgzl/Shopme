@@ -1,6 +1,6 @@
 package com.shopme.shopmebackend.export;
 
-import com.shopme.shopmecommon.entity.User;
+import com.shopme.shopme.common.entity.User;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.xssf.usermodel.*;
 

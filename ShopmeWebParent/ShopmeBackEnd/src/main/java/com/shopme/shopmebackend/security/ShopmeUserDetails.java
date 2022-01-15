@@ -1,7 +1,7 @@
 package com.shopme.shopmebackend.security;
 
-import com.shopme.shopmecommon.entity.Role;
-import com.shopme.shopmecommon.entity.User;
+import com.shopme.shopme.common.entity.Role;
+import com.shopme.shopme.common.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

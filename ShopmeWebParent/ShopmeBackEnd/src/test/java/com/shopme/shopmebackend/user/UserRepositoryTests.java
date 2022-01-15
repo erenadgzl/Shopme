@@ -1,8 +1,8 @@
 package com.shopme.shopmebackend.user;
 
 
-import com.shopme.shopmecommon.entity.Role;
-import com.shopme.shopmecommon.entity.User;
+import com.shopme.shopme.common.entity.Role;
+import com.shopme.shopme.common.entity.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

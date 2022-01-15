@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
-@EntityScan({"com.shopme.shopmecommon.entity"})
+@EntityScan({"com.shopme.shopme.common.entity"})
 public class ShopmeFrontEndApplication {
 
     public static void main(String[] args) {

@@ -1,6 +1,6 @@
 package com.shopme.shopmebackend.user;
 
-import com.shopme.shopmecommon.entity.Role;
+import com.shopme.shopme.common.entity.Role;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

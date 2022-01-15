@@ -1,11 +1,10 @@
 package com.shopme.shopmebackend.brand;
 
 import com.shopme.shopmebackend.paging.SearchRepository;
-import com.shopme.shopmecommon.entity.Brand;
+import com.shopme.shopme.common.entity.Brand;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 

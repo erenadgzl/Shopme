@@ -1,6 +1,6 @@
 package com.shopme.shopmefrontend.category;
 
-import com.shopme.shopmecommon.entity.Category;
+import com.shopme.shopme.common.entity.Category;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

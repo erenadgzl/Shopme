@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.shopme.shopmebackend.security.ShopmeUserDetails;
 import com.shopme.shopmebackend.user.UserService;
 import com.shopme.shopmebackend.util.FileUploadUtil;
-import com.shopme.shopmecommon.entity.User;
+import com.shopme.shopme.common.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;

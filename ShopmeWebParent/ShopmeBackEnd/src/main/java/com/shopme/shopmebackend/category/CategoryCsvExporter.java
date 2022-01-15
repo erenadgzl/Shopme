@@ -1,7 +1,7 @@
 package com.shopme.shopmebackend.category;
 
 import com.shopme.shopmebackend.export.AbstractExporter;
-import com.shopme.shopmecommon.entity.Category;
+import com.shopme.shopme.common.entity.Category;
 import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;

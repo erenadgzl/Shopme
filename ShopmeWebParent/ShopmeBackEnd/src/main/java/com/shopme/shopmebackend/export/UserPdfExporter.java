@@ -5,7 +5,7 @@ import com.lowagie.text.Font;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-import com.shopme.shopmecommon.entity.User;
+import com.shopme.shopme.common.entity.User;
 
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;

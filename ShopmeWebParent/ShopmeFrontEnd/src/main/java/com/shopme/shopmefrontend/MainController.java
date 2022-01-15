@@ -1,6 +1,6 @@
 package com.shopme.shopmefrontend;
 
-import com.shopme.shopmecommon.entity.Category;
+import com.shopme.shopme.common.entity.Category;
 import com.shopme.shopmefrontend.category.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;

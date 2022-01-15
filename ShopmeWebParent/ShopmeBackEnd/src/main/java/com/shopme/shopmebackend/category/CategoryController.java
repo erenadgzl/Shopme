@@ -2,7 +2,7 @@ package com.shopme.shopmebackend.category;
 
 
 import com.shopme.shopmebackend.util.FileUploadUtil;
-import com.shopme.shopmecommon.entity.Category;
+import com.shopme.shopme.common.entity.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

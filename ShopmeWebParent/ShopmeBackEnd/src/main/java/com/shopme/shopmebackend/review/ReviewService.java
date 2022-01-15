@@ -3,7 +3,7 @@ package com.shopme.shopmebackend.review;
 import com.shopme.shopme.common.exception.ReviewNotFoundException;
 import com.shopme.shopmebackend.paging.PagingAndSortingHelper;
 import com.shopme.shopmebackend.product.ProductRepository;
-import com.shopme.shopmecommon.entity.Review;
+import com.shopme.shopme.common.entity.Review;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

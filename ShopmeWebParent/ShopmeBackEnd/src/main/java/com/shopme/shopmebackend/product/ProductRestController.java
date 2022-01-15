@@ -1,7 +1,7 @@
 package com.shopme.shopmebackend.product;
 
 import com.shopme.shopme.common.exception.ProductNotFoundException;
-import com.shopme.shopmecommon.entity.product.Product;
+import com.shopme.shopme.common.entity.product.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

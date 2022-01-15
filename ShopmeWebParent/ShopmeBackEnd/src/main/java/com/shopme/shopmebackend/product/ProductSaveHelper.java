@@ -1,14 +1,13 @@
 package com.shopme.shopmebackend.product;
 
 import com.shopme.shopmebackend.util.FileUploadUtil;
-import com.shopme.shopmecommon.entity.product.Product;
-import com.shopme.shopmecommon.entity.product.ProductImage;
+import com.shopme.shopme.common.entity.product.Product;
+import com.shopme.shopme.common.entity.product.ProductImage;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class ProductSaveHelper {

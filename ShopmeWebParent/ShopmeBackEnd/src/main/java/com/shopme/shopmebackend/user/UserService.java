@@ -1,12 +1,9 @@
 package com.shopme.shopmebackend.user;
 
 import com.shopme.shopmebackend.paging.PagingAndSortingHelper;
-import com.shopme.shopmecommon.entity.Role;
-import com.shopme.shopmecommon.entity.User;
+import com.shopme.shopme.common.entity.Role;
+import com.shopme.shopme.common.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
