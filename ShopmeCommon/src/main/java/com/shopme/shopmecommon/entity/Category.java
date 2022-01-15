@@ -27,6 +27,7 @@ public class Category extends IdBasedEntity {
     private Category parent;
 
     @OneToMany(mappedBy = "parent")
+    @OrderBy("name asc")
     private Set<Category> children = new HashSet<>();
 
     public Category() {
@@ -59,7 +60,7 @@ public class Category extends IdBasedEntity {
         copyCategory.setImage(category.getImage());
         copyCategory.setAlias(category.getAlias());
         copyCategory.setEnabled(category.isEnabled());
-        copyCategory.setHasChildren(category.getChildren().size() > 0);
+        copyCategory.setHasChildren(!category.getChildren().isEmpty());
 
         return copyCategory;
     }
