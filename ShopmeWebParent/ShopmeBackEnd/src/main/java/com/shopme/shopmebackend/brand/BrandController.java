@@ -1,5 +1,6 @@
 package com.shopme.shopmebackend.brand;
 
+import com.shopme.shopmebackend.AmazonS3Util;
 import com.shopme.shopmebackend.category.CategoryService;
 import com.shopme.shopmebackend.paging.PagingAndSortingHelper;
 import com.shopme.shopmebackend.paging.PagingAndSortingParam;
@@ -23,8 +24,7 @@ import java.util.List;
 @Controller
 public class BrandController {
     private String defaultRedirectURL = "redirect:/brands/page/1?sortField=name&sortDir=asc";
-    @Autowired
-    private BrandService brandService;
+    @Autowired private BrandService brandService;
     @Autowired private CategoryService categoryService;
 
     @GetMapping("/brands")
@@ -62,8 +62,8 @@ public class BrandController {
             Brand savedBrand = brandService.save(brand);
             String uploadDir = "brand-logos/" + savedBrand.getId();
 
-            FileUploadUtil.cleanDir(uploadDir);
-            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            AmazonS3Util.removeFolder(uploadDir);
+            AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
         } else {
             brandService.save(brand);
         }
@@ -97,7 +97,7 @@ public class BrandController {
         try {
             brandService.delete(id);
             String brandDir = "brand-logos/" + id;
-            FileUploadUtil.cleanDir(brandDir);
+            AmazonS3Util.removeFolder(brandDir);
 
             redirectAttributes.addFlashAttribute("message",
                     "The brand ID " + id + " has been deleted successfully");

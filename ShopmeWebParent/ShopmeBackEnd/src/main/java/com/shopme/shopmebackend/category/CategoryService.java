@@ -1,14 +1,15 @@
 package com.shopme.shopmebackend.category;
 
 import com.shopme.shopme.common.entity.Category;
+import com.shopme.shopme.common.exception.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Service

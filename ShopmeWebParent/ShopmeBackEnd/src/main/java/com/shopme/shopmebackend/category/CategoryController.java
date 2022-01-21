@@ -1,6 +1,8 @@
 package com.shopme.shopmebackend.category;
 
 
+import com.shopme.shopme.common.exception.CategoryNotFoundException;
+import com.shopme.shopmebackend.AmazonS3Util;
 import com.shopme.shopmebackend.util.FileUploadUtil;
 import com.shopme.shopme.common.entity.Category;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,19 +16,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-
 @Controller
-@RequestMapping("/categories")
 public class CategoryController {
     @Autowired
     private CategoryService service;
 
-    @GetMapping
+    @GetMapping("/categories")
     public String listFirstPage(String sortDir, Model model) {
         return listByPage(1, sortDir, null, model);
     }
 
-    @GetMapping("/page/{pageNum}")
+    @GetMapping("/categories/page/{pageNum}")
     public String listByPage(@PathVariable(name = "pageNum") int pageNum,
                              String sortDir,	String keyword,	Model model) {
         if (sortDir ==  null || sortDir.isEmpty()) {
@@ -60,7 +60,7 @@ public class CategoryController {
         return "categories/categories";
     }
 
-    @GetMapping("/new")
+    @GetMapping("/categories/new")
     public String newCategory(Model model) {
         List<Category> listCategories = service.listCategoriesUsedInForm();
 
@@ -71,7 +71,7 @@ public class CategoryController {
         return "categories/category_form";
     }
 
-    @PostMapping("/save")
+    @PostMapping("/categories/save")
     public String saveCategory(Category category,
                                @RequestParam("fileImage") MultipartFile multipartFile,
                                RedirectAttributes ra) throws IOException {
@@ -82,8 +82,8 @@ public class CategoryController {
             Category savedCategory = service.save(category);
             String uploadDir = "category-images/" + savedCategory.getId();
 
-            FileUploadUtil.cleanDir(uploadDir);
-            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            AmazonS3Util.removeFolder(uploadDir);
+            AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
         } else {
             service.save(category);
         }
@@ -92,7 +92,7 @@ public class CategoryController {
         return "redirect:/categories";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/categories/edit/{id}")
     public String editCategory(@PathVariable(name = "id") Integer id, Model model,
                                RedirectAttributes ra) {
         try {
@@ -110,7 +110,7 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/{id}/enabled/{status}")
+    @GetMapping("/categories/{id}/enabled/{status}")
     public String updateCategoryEnabledStatus(@PathVariable("id") Integer id,
                                               @PathVariable("status") boolean enabled, RedirectAttributes redirectAttributes) {
         service.updateCategoryEnabledStatus(id, enabled);
@@ -121,14 +121,14 @@ public class CategoryController {
         return "redirect:/categories";
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/categories/delete/{id}")
     public String deleteCategory(@PathVariable(name = "id") Integer id,
                                  Model model,
                                  RedirectAttributes redirectAttributes) {
         try {
             service.delete(id);
             String categoryDir = "category-images/" + id;
-            FileUploadUtil.cleanDir(categoryDir);
+            AmazonS3Util.removeFolder(categoryDir);
 
             redirectAttributes.addFlashAttribute("message",
                     "The category ID " + id + " has been deleted successfully");
@@ -139,7 +139,7 @@ public class CategoryController {
         return "redirect:/categories";
     }
 
-    @GetMapping("/export/csv")
+    @GetMapping("/categories/export/csv")
     public void exportToCSV(HttpServletResponse response) throws IOException {
         List<Category> listCategories = service.listCategoriesUsedInForm();
         CategoryCsvExporter exporter = new CategoryCsvExporter();

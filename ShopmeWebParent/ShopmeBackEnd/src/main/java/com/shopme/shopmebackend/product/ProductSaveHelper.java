@@ -1,5 +1,6 @@
 package com.shopme.shopmebackend.product;
 
+import com.shopme.shopmebackend.AmazonS3Util;
 import com.shopme.shopmebackend.util.FileUploadUtil;
 import com.shopme.shopme.common.entity.product.Product;
 import com.shopme.shopme.common.entity.product.ProductImage;
@@ -8,13 +9,24 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ProductSaveHelper {
 
     static void deleteExtraImagesWeredRemovedOnForm(Product product) {
         String extraImageDir = "product-images/" + product.getId() + "/extras";
-        FileUploadUtil.removeDir(extraImageDir);
+        List<String> listObjectKeys = AmazonS3Util.listFolder(extraImageDir);
+
+        for (String objectKey : listObjectKeys) {
+            int lastIndexOfSlash = objectKey.lastIndexOf("/");
+            String fileName = objectKey.substring(lastIndexOfSlash + 1, objectKey.length());
+
+            if (!product.containsImageName(fileName)) {
+                AmazonS3Util.deleteFile(objectKey);
+                System.out.println("Deleted extra image: " + objectKey);
+            }
+        }
     }
 
     static void setExistingExtraImageNames(String[] imageIDs, String[] imageNames,
@@ -57,9 +69,14 @@ public class ProductSaveHelper {
             String fileName = StringUtils.cleanPath(mainImageMultipart.getOriginalFilename());
             String uploadDir = "product-images/" + savedProduct.getId();
 
-            FileUploadUtil.removeDir(uploadDir);
-            FileUploadUtil.cleanDir(uploadDir);
-            FileUploadUtil.saveFile(uploadDir, fileName, mainImageMultipart);
+            List<String> listObjectKeys = AmazonS3Util.listFolder(uploadDir + "/");
+            for (String objectKey : listObjectKeys) {
+                if (!objectKey.contains("/extras/")) {
+                    AmazonS3Util.deleteFile(objectKey);
+                }
+            }
+
+            AmazonS3Util.uploadFile(uploadDir, fileName, mainImageMultipart.getInputStream());
         }
 
         if (extraImageMultiparts.length > 0) {
@@ -67,9 +84,9 @@ public class ProductSaveHelper {
 
             for (MultipartFile multipartFile : extraImageMultiparts) {
                 if (multipartFile.isEmpty()) continue;
+
                 String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-                FileUploadUtil.cleanDir(uploadDir);
-                FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+                AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
             }
         }
 

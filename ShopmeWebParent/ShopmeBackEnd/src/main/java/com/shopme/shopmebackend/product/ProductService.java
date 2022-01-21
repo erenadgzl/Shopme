@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -18,8 +18,7 @@ import java.util.NoSuchElementException;
 public class ProductService {
     public static final int PRODUCTS_PER_PAGE = 5;
 
-    @Autowired
-    private ProductRepository repo;
+    @Autowired private ProductRepository repo;
 
     public List<Product> listAll() {
         return (List<Product>) repo.findAll();
