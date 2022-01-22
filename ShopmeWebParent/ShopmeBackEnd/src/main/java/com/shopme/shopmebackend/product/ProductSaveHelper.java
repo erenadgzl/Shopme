@@ -1,7 +1,6 @@
 package com.shopme.shopmebackend.product;
 
 import com.shopme.shopmebackend.AmazonS3Util;
-import com.shopme.shopmebackend.util.FileUploadUtil;
 import com.shopme.shopme.common.entity.product.Product;
 import com.shopme.shopme.common.entity.product.ProductImage;
 import org.springframework.util.StringUtils;

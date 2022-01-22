@@ -6,8 +6,8 @@ import com.shopme.shopmebackend.product.ProductRepository;
 import com.shopme.shopme.common.entity.Review;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.transaction.Transactional;
 import java.util.NoSuchElementException;
 
 @Service
@@ -15,8 +15,7 @@ import java.util.NoSuchElementException;
 public class ReviewService {
     public static final int REVIEWS_PER_PAGE = 5;
 
-    @Autowired
-    private ReviewRepository reviewRepo;
+    @Autowired private ReviewRepository reviewRepo;
     @Autowired private ProductRepository productRepo;
 
     public void listByPage(int pageNum, PagingAndSortingHelper helper) {

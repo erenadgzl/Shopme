@@ -1,4 +1,4 @@
-package com.shopme.shopmebackend.util;
+package com.shopme.shopmebackend;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

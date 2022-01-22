@@ -16,8 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ReviewController {
     private String defaultRedirectURL = "redirect:/reviews/page/1?sortField=reviewTime&sortDir=desc";
 
-    @Autowired
-    private ReviewService service;
+    @Autowired private ReviewService service;
 
     @GetMapping("/reviews")
     public String listFirstPage(Model model) {

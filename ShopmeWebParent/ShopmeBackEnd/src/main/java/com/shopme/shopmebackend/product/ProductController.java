@@ -6,7 +6,7 @@ import com.shopme.shopmebackend.category.CategoryService;
 import com.shopme.shopmebackend.paging.PagingAndSortingHelper;
 import com.shopme.shopmebackend.paging.PagingAndSortingParam;
 import com.shopme.shopmebackend.security.ShopmeUserDetails;
-import com.shopme.shopmebackend.util.FileUploadUtil;
+import com.shopme.shopmebackend.FileUploadUtil;
 import com.shopme.shopme.common.entity.Brand;
 import com.shopme.shopme.common.entity.Category;
 import com.shopme.shopme.common.entity.product.Product;

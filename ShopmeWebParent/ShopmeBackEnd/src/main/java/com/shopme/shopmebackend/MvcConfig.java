@@ -1,4 +1,4 @@
-package com.shopme.shopmebackend.config;
+package com.shopme.shopmebackend;
 
 import com.shopme.shopmebackend.paging.PagingAndSortingArgumentResolver;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +13,7 @@ import java.util.List;
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
 
-    @Override
+    /*@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		exposeDirectory("user-photos", registry);
 		exposeDirectory("../category-images", registry);
@@ -31,7 +31,7 @@ public class MvcConfig implements WebMvcConfigurer {
 		registry.addResourceHandler(logicalPath)
 			.addResourceLocations("file:/" + absolutePath + "/");
 	}
-
+*/
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new PagingAndSortingArgumentResolver());

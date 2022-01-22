@@ -3,7 +3,6 @@ package com.shopme.shopmebackend.category;
 
 import com.shopme.shopme.common.exception.CategoryNotFoundException;
 import com.shopme.shopmebackend.AmazonS3Util;
-import com.shopme.shopmebackend.util.FileUploadUtil;
 import com.shopme.shopme.common.entity.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

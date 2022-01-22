@@ -1,16 +1,16 @@
 package com.shopme.shopmebackend.user.controller;
 
 
-import com.shopme.shopmebackend.export.UserCsvExporter;
-import com.shopme.shopmebackend.export.UserExcelExporter;
-import com.shopme.shopmebackend.export.UserPdfExporter;
+import com.shopme.shopmebackend.AmazonS3Util;
 import com.shopme.shopmebackend.paging.PagingAndSortingHelper;
 import com.shopme.shopmebackend.paging.PagingAndSortingParam;
 import com.shopme.shopmebackend.user.UserNotFoundException;
 import com.shopme.shopmebackend.user.UserService;
-import com.shopme.shopmebackend.util.FileUploadUtil;
 import com.shopme.shopme.common.entity.Role;
 import com.shopme.shopme.common.entity.User;
+import com.shopme.shopmebackend.user.export.UserCsvExporter;
+import com.shopme.shopmebackend.user.export.UserExcelExporter;
+import com.shopme.shopmebackend.user.export.UserPdfExporter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,19 +25,16 @@ import java.io.IOException;
 import java.util.List;
 
 @Controller
-@RequestMapping("/users")
 public class UserController {
-
     private String defaultRedirectURL = "redirect:/users/page/1?sortField=firstName&sortDir=asc";
-
     @Autowired private UserService service;
 
-    @GetMapping
+    @GetMapping("/users")
     public String listFirstPage() {
         return defaultRedirectURL;
     }
 
-    @GetMapping("/page/{pageNum}")
+    @GetMapping("/users/page/{pageNum}")
     public String listByPage(
             @PagingAndSortingParam(listName = "listUsers", moduleURL = "/users") PagingAndSortingHelper helper,
             @PathVariable(name = "pageNum") int pageNum) {
@@ -47,7 +44,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/new")
+    @GetMapping("/users/new")
     public String newUser(Model model) {
         List<Role> listRoles = service.listRoles();
 
@@ -61,7 +58,7 @@ public class UserController {
         return "users/user_form";
     }
 
-    @PostMapping("/save")
+    @PostMapping("/users/save")
     public String saveUser(User user, RedirectAttributes redirectAttributes,
                            @RequestParam("image") MultipartFile multipartFile) throws IOException {
 
@@ -72,8 +69,8 @@ public class UserController {
 
             String uploadDir = "user-photos/" + savedUser.getId();
 
-            FileUploadUtil.cleanDir(uploadDir);
-            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+            AmazonS3Util.removeFolder(uploadDir);
+            AmazonS3Util.uploadFile(uploadDir, fileName, multipartFile.getInputStream());
         } else {
             if (user.getPhotos().isEmpty()) user.setPhotos(null);
             service.save(user);
@@ -90,7 +87,7 @@ public class UserController {
         return "redirect:/users/page/1?sortField=id&sortDir=asc&keyword=" + firstPartOfEmail;
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/users/edit/{id}")
     public String editUser(@PathVariable(name = "id") Integer id,
                            Model model,
                            RedirectAttributes redirectAttributes) {
@@ -109,14 +106,14 @@ public class UserController {
         }
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/users/delete/{id}")
     public String deleteUser(@PathVariable(name = "id") Integer id,
                              Model model,
                              RedirectAttributes redirectAttributes) {
         try {
             service.delete(id);
             String userPhotosDir = "user-photos/" + id;
-            FileUploadUtil.cleanDir(userPhotosDir);
+            AmazonS3Util.removeFolder(userPhotosDir);
 
             redirectAttributes.addFlashAttribute("message",
                     "The user ID " + id + " has been deleted successfully");
@@ -127,7 +124,7 @@ public class UserController {
         return defaultRedirectURL;
     }
 
-    @GetMapping("/{id}/enabled/{status}")
+    @GetMapping("/users/{id}/enabled/{status}")
     public String updateUserEnabledStatus(@PathVariable("id") Integer id,
                                           @PathVariable("status") boolean enabled, RedirectAttributes redirectAttributes) {
         service.updateUserEnabledStatus(id, enabled);
@@ -138,14 +135,14 @@ public class UserController {
         return defaultRedirectURL;
     }
 
-    @GetMapping("/export/csv")
+    @GetMapping("/users/export/csv")
     public void exportToCSV(HttpServletResponse response) throws IOException {
         List<User> listUsers = service.listAll();
         UserCsvExporter exporter = new UserCsvExporter();
         exporter.export(listUsers, response);
     }
 
-    @GetMapping("/export/excel")
+    @GetMapping("/users/export/excel")
     public void exportToExcel(HttpServletResponse response) throws IOException {
         List<User> listUsers = service.listAll();
 
@@ -153,7 +150,7 @@ public class UserController {
         exporter.export(listUsers, response);
     }
 
-    @GetMapping("/export/pdf")
+    @GetMapping("/users/export/pdf")
     public void exportToPDF(HttpServletResponse response) throws IOException {
         List<User> listUsers = service.listAll();
 

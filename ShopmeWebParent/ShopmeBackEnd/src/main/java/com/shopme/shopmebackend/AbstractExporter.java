@@ -1,4 +1,4 @@
-package com.shopme.shopmebackend.export;
+package com.shopme.shopmebackend;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
